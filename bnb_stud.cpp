@@ -52,7 +52,7 @@ public:
                 cur_set.push_back(val);
                 unused.erase(i);
                 find_ind_set(cur_set, unused, pairs, indep_sets);
-                found_large = true;    // To add only unique sets
+                found_large = true;    // To add only unique sets without their subsets
                 cur_set.pop_back();
                 i = unused.begin();
             } else {
@@ -123,7 +123,6 @@ public:
                 string in;
                 line_input >> command >> in >> vertices >> edges;
                 neighbours.resize(vertices);
-                // candidates.resize(vertices);
             }
             else 
             {
@@ -134,7 +133,6 @@ public:
             }
         }
         cout << "vertices : " << vertices << endl;
-        // env = IloEnv();
         model = IloModel(env);
         x = IloFloatVarArray(env, vertices);
         for (auto i = 0; i < vertices; ++i) {
@@ -194,23 +192,12 @@ public:
         vector<int> candidates;
         for (int i = 0; i < neighbours.size(); ++i)
         {
-            // if (best_clique.find(i) == best_clique.end()) {
-            //     bool to_add = true;
-            //     for (int j : best_clique) {
-            //         if (neighbours[j].find(i) == neighbours[j].end())
-            //             to_add = false;
-            //     }
-            //     if (to_add)
-            //         candidates.push_back(i);
-            // }
-            // if (best_clique.find(i) == best_clique.end())
             candidates.push_back(i);
         }
         static mt19937 generator;
-        shuffle(candidates.begin(), candidates.end(), generator); // TODO: Pardalos's order
+        shuffle(candidates.begin(), candidates.end(), generator);
         pair<int, int> prev_vertex = {-1, 0};
         cout << "Candidates size : " << candidates.size() << endl;
-        // clique = best_clique;
         BnBRecursion(candidates, prev_vertex);
     }
 
@@ -257,17 +244,7 @@ private:
     }
     void BnBRecursion(vector<int>& candidates, pair<int, int> prev_vertex)
     {
-        // if (candidates.empty())
-        // {
-        //     if (clique.size() > best_clique.size())
-        //     {
-        //         best_clique = clique;
-        //     }
-        //     expr.end();
-        //     return;
-        // }
-        if ()
-        if (clique.size() + candidates.size() <= best_clique.size()) // TODO: Upper bound (Fast), add more
+        if (clique.size() + candidates.size() <= best_clique.size())
             return;
 
         bool prev_vertex_in = (prev_vertex.second == 1);
@@ -285,10 +262,7 @@ private:
 
         auto res = solve_cplex(candidates); // res.first - obj func, res.second - x[i] (cplex variables)
         double sol = res.first;
-        // if (prev_vertex_in == 1)
-        //     cout << "Candidates, clique, sol : " << candidates.size() << " " << clique.size() << " " << sol <<  endl;
-        // cout << "cplex sol: " << sol << endl;
-        if (floor(sol + 0.00001) <= clique.size() || floor(sol + 0.00001) <= best_clique.size()) {
+        if (floor(sol + EPS) <= clique.size() || floor(sol + EPS) <= best_clique.size()) {
             if (best_clique.size() < clique.size()) {
                 best_clique  = clique;
                 cout << "New best clique : " << best_clique.size() << endl;
