@@ -1,0 +1,144 @@
+====== brock200_1.clq ======
+vertices : 200
+Number of independent sets: 2999
+Tabu Search Initial Clique : 21
+brock200_1.clq, result - 21, time - 64.394
+====== brock200_2.clq ======
+vertices : 200
+Number of independent sets: 4042
+Tabu Search Initial Clique : 12
+brock200_2.clq, result - 12, time - 35.5302
+====== brock200_3.clq ======
+vertices : 200
+Number of independent sets: 3797
+Tabu Search Initial Clique : 15
+brock200_3.clq, result - 15, time - 37.3539
+====== brock200_4.clq ======
+vertices : 200
+Number of independent sets: 3487
+Tabu Search Initial Clique : 17
+brock200_4.clq, result - 17, time - 37.8313
+====== brock400_1.clq ======
+vertices : 400
+Number of independent sets: 11354
+Tabu Search Initial Clique : 24
+brock400_1.clq, result - 24, time - 393.358
+====== brock400_2.clq ======
+vertices : 400
+Number of independent sets: 11166
+Tabu Search Initial Clique : 25
+brock400_2.clq, result - 25, time - 347.724
+====== brock400_3.clq ======
+vertices : 400
+Number of independent sets: 11429
+Tabu Search Initial Clique : 24
+brock400_3.clq, result - 24, time - 268.815
+====== brock400_4.clq ======
+vertices : 400
+Number of independent sets: 11423
+Tabu Search Initial Clique : 33
+brock400_4.clq, result - 33, time - 358.942
+====== C125.9.clq ======
+vertices : 125
+Number of independent sets: 294
+Tabu Search Initial Clique : 30
+Candidates size : 125
+New best clique : 34
+C125.9.clq, result - 34, time - 2.26885
+====== gen200_p0.9_44.clq ======
+vertices : 200
+Number of independent sets: 962
+Tabu Search Initial Clique : 44
+gen200_p0.9_44.clq, result - 44, time - 10.7814
+====== gen200_p0.9_55.clq ======
+vertices : 200
+Number of independent sets: 994
+Tabu Search Initial Clique : 38
+New best clique : 55
+gen200_p0.9_55.clq, result - 55, time - 2.14655
+====== hamming8-4.clq ======
+vertices : 256
+Number of independent sets: 3689
+Tabu Search Initial Clique : 16
+Candidates size : 256
+hamming8-4.clq, result - 16, time - 32.2382
+====== johnson16-2-4.clq ======
+vertices : 120
+Number of independent sets: 344
+Tabu Search Initial Clique : 8
+Candidates size : 120
+johnson16-2-4.clq, result - 8, time - 1.27366
+====== johnson8-2-4.clq ======
+vertices : 28
+Number of independent sets: 77
+Tabu Search Initial Clique : 4
+Candidates size : 28
+johnson8-2-4.clq, result - 4, time - 0.021588
+====== keller4.clq ======
+vertices : 171
+Number of independent sets: 2151
+Tabu Search Initial Clique : 9
+Candidates size : 171
+New best clique : 11
+keller4.clq, result - 11, time - 10.3924
+====== MANN_a27.clq ======
+vertices : 378
+Number of independent sets: 117
+Tabu Search Initial Clique : 122
+Candidates size : 378
+New best clique : 126
+MANN_a27.clq, result - 126, time - 9.69381
+====== MANN_a9.clq ======
+vertices : 45
+Number of independent sets: 12
+Tabu Search Initial Clique : 16
+MANN_a9.clq, result - 16, time - 0.070865
+====== p_hat1000-1.clq ======
+vertices : 1000
+Number of independent sets: 65486
+Tabu Search Initial Clique : 10
+Markowitz threshold set to 0.1
+Markowitz threshold set to 0.1
+p_hat1000-1.clq, result - 10, time - 1518.93
+====== p_hat1000-2.clq ======
+vertices : 1000
+Number of independent sets: 77960
+Tabu Search Initial Clique : 37
+Candidates size : 1000
+New best clique : 42
+p_hat1000-2.clq, result - 42, time - 4668.82
+====== p_hat1500-1.clq ======
+vertices : 1500
+Number of independent sets: 141246
+Tabu Search Initial Clique : 12
+Markowitz threshold set to 0.1
+Markowitz threshold set to 0.1
+p_hat1500-1.clq, result - 12, time - 2759.32
+====== p_hat300-3.clq ======
+vertices : 300
+Number of independent sets: 6186
+Tabu Search Initial Clique : 34
+p_hat300-3.clq, result - 34, time - 208.54
+====== p_hat500-3.clq ======
+vertices : 500
+Number of independent sets: 16254
+Tabu Search Initial Clique : 47
+p_hat500-3.clq, result - 47, time - 990.367
+====== san1000.clq ======
+vertices : 1000
+Number of independent sets: 31902
+Tabu Search Initial Clique : 10
+Markowitz threshold set to 0.1
+Markowitz threshold set to 0.1
+Markowitz threshold set to 0.1
+san1000.clq, result - 10, time - 1600.88
+====== sanr200_0.9.clq ======
+vertices : 200
+Number of independent sets: 1003
+Tabu Search Initial Clique : 39
+sanr200_0.9.clq, result - 39, time - 16.8899
+====== sanr400_0.7.clq ======
+vertices : 400
+Number of independent sets: 12405
+Tabu Search Initial Clique : 21
+sanr400_0.7.clq, result - 21, time - 325.774

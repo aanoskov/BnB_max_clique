@@ -15,7 +15,6 @@
 #include <ilcplex/ilocplex.h>
 // #include "/opt/ibm/ILOG/CPLEX_Studio_Community221/cplex/include/ilcplex/ilocplex.h"
 
-
 using namespace std;
 
 
@@ -39,7 +38,7 @@ public:
 
         auto i = unused.begin();
         int depth = cur_set.size();
-        while(i != unused.end() && cur_set.size() < 1000 ) {
+        while(i != unused.end() && cur_set.size() < neighbours.size() ) {
             bool independent = true;
             for (int &j: cur_set) {
                 if (neighbours[j].find(*i) != neighbours[j].end() || *i == j) {
@@ -82,11 +81,10 @@ public:
                 }
             }
         }
-        cout << "Number of pairs: " << pairs.size() << endl;
+        // cout << "Number of pairs: " << pairs.size() << endl;
         vector<vector<int>> indep_sets;
         for (int i = 0; i < neighbours.size(); ++i) {
-            // cout << "i = " << i << " ";
-            for (int _ = 0; _ < 10; ++_) {
+            for (int _ = 0; _ < 5; ++_) {
                 vector<int> unused;
                 for (int j = 0; j < neighbours.size(); ++j) {
                     int vertex = GetRandom(0, neighbours.size() - 1);
@@ -96,8 +94,6 @@ public:
                 find_ind_set(vector<int>({i}), unused, pairs, indep_sets);
             }
         }
-        // cout << endl;
-        // cout << "Number of pairs.2 : " << pairs.size() << endl;
         cout << "Number of independent sets: " << indep_sets.size() << endl;
         for (auto &i : pairs)
             indep_sets.push_back(vector<int>({i.first.first, i.first.second}));
@@ -186,7 +182,7 @@ public:
     {
         MaxCliqueTabuSearch st;
         st.ReadGraphFile(file);
-        st.RunSearch(0, 7);
+        st.RunSearch(neighbours.size() * 10, 7);
         best_clique = st.GetClique();
         cout << "Tabu Search Initial Clique : " << best_clique.size() << endl;
         vector<int> candidates;
@@ -197,7 +193,8 @@ public:
         static mt19937 generator;
         shuffle(candidates.begin(), candidates.end(), generator);
         pair<int, int> prev_vertex = {-1, 0};
-        cout << "Candidates size : " << candidates.size() << endl;
+        // cout << "Candidates size : " << candidates.size() << endl;
+        start = clock();
         BnBRecursion(candidates, prev_vertex);
     }
 
@@ -228,8 +225,6 @@ public:
         clique.clear();
     }
 
-
-
     IloModel model;
     IloEnv env;
     IloFloatVarArray x;
@@ -246,7 +241,8 @@ private:
     {
         if (clique.size() + candidates.size() <= best_clique.size())
             return;
-
+        if ((double)((clock() - start) / CLOCKS_PER_SEC) > 1000.) 
+            return;
         bool prev_vertex_in = (prev_vertex.second == 1);
         bool is_first_vertex = (prev_vertex.first == -1);
 
@@ -262,6 +258,7 @@ private:
 
         auto res = solve_cplex(candidates); // res.first - obj func, res.second - x[i] (cplex variables)
         double sol = res.first;
+
         if (floor(sol + EPS) <= clique.size() || floor(sol + EPS) <= best_clique.size()) {
             if (best_clique.size() < clique.size()) {
                 best_clique  = clique;
@@ -280,7 +277,6 @@ private:
                 best_clique = clique;
                 cout << "New best clique : " << best_clique.size();
             }
-
             if (prev_vertex_in)
                 clique.erase(prev_vertex.first);
             if (!is_first_vertex)
@@ -292,14 +288,14 @@ private:
         int vertex = candidates.back();
         candidates.pop_back();
 
-        bool no_edge = false;
+        bool all_edges = true;
         for (int i: clique) {
             if (neighbours[vertex].find(i) == neighbours[vertex].end()) {
-                no_edge = true;
+                all_edges = false;
                 break;
             }
         }
-        if (!no_edge) {
+        if (all_edges) {
             prev_vertex.first = vertex;
             prev_vertex.second = 1;
             BnBRecursion(candidates, prev_vertex);
@@ -319,7 +315,7 @@ private:
     }
 
 private:
-    double EPS = 0.00001;
+    double EPS = 0.0001;
     clock_t start;
     vector<unordered_set<int>> neighbours;
     pair<int, bool> prev_v;
@@ -332,20 +328,14 @@ int main()
 {
     // ios_base::sync_with_stdio(false);
     // cin.tie(nullptr);
-    // vector<string> files = { /*"C125.9.clq", "johnson8-2-4.clq", "johnson16-2-4.clq", "MANN_a9.clq", "MANN_a27.clq",
-    //     "p_hat1000-1.clq",*/ "keller4.clq", "hamming8-4.clq", /*"brock200_1.clq",*/ "brock200_2.clq", "brock200_3.clq", "brock200_4.clq",
-    //     /*"gen200_p0.9_44.clq", "gen200_p0.9_55.clq", "brock400_1.clq", "brock400_2.clq", "brock400_3.clq", "brock400_4.clq",
-    //     "MANN_a45.clq", "sanr400_0.7.clq", "p_hat1000-2.clq", "p_hat500-3.clq", "p_hat1500-1.clq", "p_hat300-3.clq", "san1000.clq",
-    //     "sanr200_0.9.clq"*/ };
-    vector<string> files = {"gen200_p0.9_55.clq", "san200_0.7_2.clq", "san200_0.9_2.clq", "san200_0.9_3.clq", "johnson8-2-4.clq", "johnson16-2-4.clq"};
 
-    // vector<string> files = {"brock200_1.clq", "brock200_2.clq", "brock200_3.clq", "brock200_4.clq", 
-    //                     "brock400_1.clq", "brock400_2.clq", "brock400_3.clq", "brock400_4.clq",
-    //                     "C125.9.clq", "gen200_p0.9_44.clq", "gen200_p0.9_55.clq", "hamming8-4.clq",
-    //                     "johnson16-2-4.clq", "johnson8-2-4.clq", "keller4.clq", "MANN_a27.clq", 
-    //                     "MANN_a9.clq", "p_hat1000-1.clq", "p_hat1000-2.clq", "p_hat1500-1.clq",
-    //                     "p_hat300-3.clq", "p_hat500-3.clq", "san1000.clq", "sanr200_0.9.clq", 
-    //                     "sanr400_0.7.clq"};    
+    vector<string> files = {"brock200_1.clq", "brock200_2.clq", "brock200_3.clq", "brock200_4.clq",
+                        "brock400_1.clq", "brock400_2.clq", "brock400_3.clq", "brock400_4.clq",
+                        "C125.9.clq", "gen200_p0.9_44.clq", "gen200_p0.9_55.clq", "hamming8-4.clq",
+                        "johnson16-2-4.clq", "johnson8-2-4.clq", "keller4.clq", "MANN_a27.clq", 
+                        "MANN_a9.clq", "p_hat1000-1.clq", "p_hat1000-2.clq", "p_hat1500-1.clq",
+                        "p_hat300-3.clq", "p_hat500-3.clq", "san1000.clq", "sanr200_0.9.clq", 
+                        "sanr400_0.7.clq"};
 
     ofstream fout("clique_bnb.csv");
     fout << "File; Clique; Time (sec)\n";
