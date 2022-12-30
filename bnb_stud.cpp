@@ -232,7 +232,7 @@ public:
 private:
     bool isIntValues(vector<float>& values) {
         for (float val: values) {
-            if ((val - EPS > 0) || (val + EPS < 1)) 
+            if ((val - EPS > 0) && (val + EPS < 1)) 
                 return false;
         }
         return true;
@@ -241,18 +241,19 @@ private:
     {
         if (clique.size() + candidates.size() <= best_clique.size())
             return;
-        if ((double)((clock() - start) / CLOCKS_PER_SEC) > 1000.) 
-            return;
-        bool prev_vertex_in = (prev_vertex.second == 1);
-        bool is_first_vertex = (prev_vertex.first == -1);
+        if ((double)((clock() - start) / CLOCKS_PER_SEC) > 2000.) 
+            return;\
+        pair<int, int> prev_vertex_copy = prev_vertex;
+        bool prev_vertex_in = (prev_vertex_copy.second == 1);
+        bool is_first_vertex = (prev_vertex_copy.first == -1);
 
         IloRange constraint;
         IloExpr expr(env);
         if (!is_first_vertex) {
             if (prev_vertex_in)
-                clique.insert(prev_vertex.first);
-            expr = x[prev_vertex.first];
-            constraint = IloRange(env, prev_vertex.second, expr, prev_vertex.second);
+                clique.insert(prev_vertex_copy.first);
+            expr = x[prev_vertex_copy.first];
+            constraint = IloRange(env, prev_vertex_copy.second, expr, prev_vertex_copy.second);
             model.add(constraint);
         }
 
@@ -265,20 +266,25 @@ private:
                 cout << "New best clique : " << best_clique.size() << endl;
             }
             if (prev_vertex_in) 
-                clique.erase(prev_vertex.first);
+                clique.erase(prev_vertex_copy.first);
             if (!is_first_vertex)
                 model.remove(constraint);
             expr.end();
             return;
         }
-
-        if (isIntValues(res.second) || candidates.empty()) {
+        if (isIntValues(res.second)) {
             if (clique.size() > best_clique.size()) {
                 best_clique = clique;
-                cout << "New best clique : " << best_clique.size();
+                // cout << "New best clique : " << best_clique.size() << endl;
+            }
+        }
+        if (candidates.empty()) {
+            if (clique.size() > best_clique.size()) {
+                best_clique = clique;
+                cout << "New best clique : " << best_clique.size() << endl;
             }
             if (prev_vertex_in)
-                clique.erase(prev_vertex.first);
+                clique.erase(prev_vertex_copy.first);
             if (!is_first_vertex)
                 model.remove(constraint);
 
@@ -309,7 +315,7 @@ private:
         if (!is_first_vertex) {
             model.remove(constraint);
             if (prev_vertex_in)
-                clique.erase(prev_vertex.first);
+                clique.erase(prev_vertex_copy.first);
         }
         expr.end();
     }
@@ -329,13 +335,18 @@ int main()
     // ios_base::sync_with_stdio(false);
     // cin.tie(nullptr);
 
-    vector<string> files = {"brock200_1.clq", "brock200_2.clq", "brock200_3.clq", "brock200_4.clq",
-                        "brock400_1.clq", "brock400_2.clq", "brock400_3.clq", "brock400_4.clq",
-                        "C125.9.clq", "gen200_p0.9_44.clq", "gen200_p0.9_55.clq", "hamming8-4.clq",
-                        "johnson16-2-4.clq", "johnson8-2-4.clq", "keller4.clq", "MANN_a27.clq", 
-                        "MANN_a9.clq", "p_hat1000-1.clq", "p_hat1000-2.clq", "p_hat1500-1.clq",
-                        "p_hat300-3.clq", "p_hat500-3.clq", "san1000.clq", "sanr200_0.9.clq", 
-                        "sanr400_0.7.clq"};
+    vector<string> files = {
+        "brock200_1.clq", "brock200_2.clq", "brock200_3.clq", "brock200_4.clq",
+        "c-fat200-1.clq", "c-fat200-2.clq", "c-fat200-5.clq", "c-fat500-1.clq",
+                            "c-fat500-10.clq", "c-fat500-2.clq", "c-fat500-5.clq", 
+                            "C125.9.clq", "gen200_p0.9_44.clq", "gen200_p0.9_55.clq", "johnson8-2-4.clq", "johnson8-4-4.clq",
+                            "johnson16-2-4.clq",
+                            "hamming6-2.clq", "hamming6-4.clq", "hamming8-2.clq", "hamming8-4.clq", 
+                            "keller4.clq", "MANN_a9.clq", "MANN_a27.clq", "MANN_a45.clq", "p_hat300-1.clq",
+                            "p_hat300-2.clq", "p_hat300-3.clq", "san200_0.7_1.clq", "san200_0.7_2.clq", 
+                            "san200_0.9_1.clq", "san200_0.9_2.clq",
+                            "san200_0.9_3.clq", "sanr200_0.7.clq"};
+    // vector<string> files = {"MANN_a27.clq"};
 
     ofstream fout("clique_bnb.csv");
     fout << "File; Clique; Time (sec)\n";
